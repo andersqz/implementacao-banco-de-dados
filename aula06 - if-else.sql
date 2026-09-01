@@ -23,3 +23,25 @@ else
 		print 'o salario esta acima da media'
 	end
 ----------------------------------------------------------------------------------------
+
+
+-- verifica alguma coisa
+declare @data_nascimento date,
+		@idade int,
+		@dia_nascimento int,
+		@hoje int,
+		@mes_nascimento int,
+		@mes int
+
+set @data_nascimento = (select Datanasc from FUNCIONARIO where Pnome = 'Pedro')
+set @mes_nascimento = month(@data_nascimento)
+set @mes = month(getdate())
+set @dia_nascimento = day(@data_nascimento)
+set @hoje = day(getdate())
+
+if (@mes_nascimento > @mes or (@mes_nascimento = @mes and @dia_nascimento > @hoje))
+	set @idade = datediff(year, YEAR(@data_nascimento), year(getdate())) - 1
+else
+	set @idade = datediff(year, YEAR(@data_nascimento), year(getdate()))
+----------------------------------------------------------------------------------------
+		
