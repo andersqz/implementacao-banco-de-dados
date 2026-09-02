@@ -60,3 +60,29 @@ else if @recebeu is null
 else
 	print 'nao recebeu'
 ----------------------------------------------------------------------------------------
+
+
+
+-- versao diferente de usar IIF num select
+select 
+	f.Pnome,
+	f.Salario,
+	iif(f.Salario > 30000, 'v', 'f') as class
+from
+	FUNCIONARIO as f
+----------------------------------------------------------------------------------------
+
+
+-- versao diferente de usar condição
+select 
+	f.Pnome,
+	f.Salario,
+
+	case
+		when f.Salario <= 8000 then 'baixo'
+		when f.Salario > 8000 and f.Salario < 30000 then 'medio'
+		when f.Salario >= 30000 then 'alto'
+	end as 'Categoria'
+from
+	FUNCIONARIO as f
+----------------------------------------------------------------------------------------
