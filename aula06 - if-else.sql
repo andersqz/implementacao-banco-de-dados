@@ -25,7 +25,7 @@ else
 ----------------------------------------------------------------------------------------
 
 
--- verifica alguma coisa
+-- verifica alguma coisa idade
 declare @data_nascimento date,
 		@idade int,
 		@dia_nascimento int,
@@ -40,8 +40,23 @@ set @dia_nascimento = day(@data_nascimento)
 set @hoje = day(getdate())
 
 if (@mes_nascimento > @mes or (@mes_nascimento = @mes and @dia_nascimento > @hoje))
-	set @idade = datediff(year, YEAR(@data_nascimento), year(getdate())) - 1
+	set @idade = datediff(year, @data_nascimento, getdate()) - 1
 else
-	set @idade = datediff(year, YEAR(@data_nascimento), year(getdate()))
+	set @idade = datediff(year, @data_nascimento, getdate())
+
+	print(@data_nascimento)
+	print @idade
 ----------------------------------------------------------------------------------------
 		
+
+--- verifica se um funcionario recebeu bonus
+declare @recebeu decimal(10,2)
+set @recebeu = (select Bonus from FUNCIONARIO where Pnome = 'Ana')
+
+if @recebeu <> 0
+	print 'recebeu'
+else if @recebeu is null
+	print 'nunca recebeu'
+else
+	print 'nao recebeu'
+----------------------------------------------------------------------------------------
