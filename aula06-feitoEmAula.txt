@@ -1,0 +1,151 @@
+
+use empresa
+
+
+
+--- use se o salario da jennifer esta acima ou abaixo da media
+declare @salarioJennifer decimal(10, 3),
+		@media decimal(10, 3)
+
+set @media = (select avg(Salario) as media from FUNCIONARIO)
+set @salarioJennifer = (select Salario from FUNCIONARIO where Pnome = 'Jennifer')
+
+if (@salarioJennifer < @media)
+	begin
+		print 'media: ' + cast(@media as varchar(10))
+		print 'salario da jennifer: ' + cast(@salarioJennifer as varchar(10))
+		print 'o salario esta abaixo da media'
+	end
+else
+	begin	
+		print 'media: ' + cast(@media as varchar(10))
+		print 'salario da jennifer: ' + cast(@salarioJennifer as varchar(10))
+		print 'o salario esta acima da media'
+	end
+----------------------------------------------------------------------------------------
+
+
+-- verifica alguma coisa idade
+declare @data_nascimento date,
+		@idade int,
+		@dia_nascimento int,
+		@hoje int,
+		@mes_nascimento int,
+		@mes int
+
+set @data_nascimento = (select Datanasc from FUNCIONARIO where Pnome = 'Pedro')
+set @mes_nascimento = month(@data_nascimento)
+set @mes = month(getdate())
+set @dia_nascimento = day(@data_nascimento)
+set @hoje = day(getdate())
+
+if (@mes_nascimento > @mes or (@mes_nascimento = @mes and @dia_nascimento > @hoje))
+	set @idade = datediff(year, @data_nascimento, getdate()) - 1
+else
+	set @idade = datediff(year, @data_nascimento, getdate())
+
+	print(@data_nascimento)
+	print @idade
+----------------------------------------------------------------------------------------
+		
+
+--- verifica se um funcionario recebeu bonus
+declare @recebeu decimal(10,2)
+set @recebeu = (select Bonus from FUNCIONARIO where Pnome = 'Ana')
+
+if @recebeu <> 0
+	print 'recebeu'
+else if @recebeu is null
+	print 'nunca recebeu'
+else
+	print 'nao recebeu'
+----------------------------------------------------------------------------------------
+
+
+
+-- versao diferente de usar IIF num select
+select 
+	f.Pnome,
+	f.Salario,
+	iif(f.Salario > 30000, 'v', 'f') as class
+from
+	FUNCIONARIO as f
+----------------------------------------------------------------------------------------
+
+
+-- versao diferente de usar condição
+select 
+	f.Pnome,
+	f.Salario,
+
+	case
+		when f.Salario <= 8000 then 'baixo'
+		when f.Salario > 8000 and f.Salario < 30000 then 'medio'
+		when f.Salario >= 30000 then 'alto'
+	end as 'Categoria'
+from
+	FUNCIONARIO as f
+----------------------------------------------------------------------------------------
+
+
+use EMPRESA
+
+SELECT * FROM DEPARTAMENTO
+SELECT * FROM DEPENDENTE
+SELECT * FROM FUNCIONARIO
+SELECT * FROM PROJETO
+SELECT * FROM LOCALIZACAO_DEP
+SELECT * FROM TRABALHA_EM
+
+------------------------------------------------------------------------------------
+-- calcula a idade de um funcionario
+declare @idade int,
+		@nascimento date,
+		@hoje date
+
+set @nascimento = (select Datanasc from FUNCIONARIO where Pnome = 'Pedro')
+set @hoje = getdate()
+set @idade = year(@hoje) - year(@nascimento)
+select @idade
+------------------------------------------------------------------------------------
+
+
+-- CAST
+select 
+	'o funcionario '
+	+ Pnome
+	+ ' tem o salário de: R$'
+	+ cast(Salario as varchar(10)) as 'nome e salario dos funcionarios'
+from
+	FUNCIONARIO
+------------------------------------------------------------------------------------
+
+
+-- CONVERT SALARIO PARA STRING
+select 
+	'o funcionario '
+	+ Pnome
+	+ ' tem o salário de: R$'
+	+ convert(varchar(10), Salario) as 'nome e salario dos funcionarios'
+from
+	FUNCIONARIO
+------------------------------------------------------------------------------------
+
+
+-- CONVERT FORMATO DATA
+select 
+	'o funcionario '
+	+ Pnome
+	+ ' nasceu em '
+	+ convert(nvarchar(10), Datanasc, 109) as 'nome e nascimento dos funcionarios'
+from
+	FUNCIONARIO
+------------------------------------------------------------------------------------
+
+
+-- CONVERT formato data de nascimento usando variaveis
+declare @date date;
+set @date = (select Datanasc from FUNCIONARIO where Pnome = 'Jennifer')
+print convert(nvarchar(10), @date, 103)
+------------------------------------------------------------------------------------
+
